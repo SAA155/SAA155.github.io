@@ -1,0 +1,215 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title> Windows 软件部署与管理的新标准：Winget |  Notes</title>
+
+<link rel="shortcut icon" href="https://notes.redfox.moe/favicon.ico?v=1765522710869">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://notes.redfox.moe/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KBB1FE7X6N"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-KBB1FE7X6N');
+</script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+    
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+             Notes
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1765522710869"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                     Windows 软件部署与管理的新标准：Winget
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2025-12-03 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <p>在传统的 Windows 环境中，软件的获取与维护往往伴随着繁琐的流程：打开浏览器搜索、甄别官方网站、下载安装包、手动点击“下一步”、以及不定期的手动检查更新。这种分散且低效的管理方式，在企业级部署或极客的生产力环境中，已经显得不再合时宜。</p>
+<p>Winget (Windows Package Manager) 是微软官方推出的一款命令行包管理工具。它旨在将 Linux 系统中高效的软件管理体验引入 Windows，通过标准化的指令实现软件的搜索、安装、升级与卸载。</p>
+<p>本文将介绍如何构建基于 Winget 的现代化软件管理工作流，并为习惯图形界面的用户提供可视化解决方案。</p>
+<hr>
+<h2 id="1-环境部署与验证">1. 环境部署与验证</h2>
+<p>对于大多数运行 Windows 10 (1709 及更高版本) 和 Windows 11 的设备，Winget 已经作为“应用安装程序”组件默认预装在系统中。</p>
+<h3 id="验证安装">验证安装</h3>
+<p>请打开 PowerShell 或命令提示符 (CMD)，输入以下命令：</p>
+<pre><code class="language-powershell">winget -v
+</code></pre>
+<ul>
+<li><strong>若返回版本号</strong>（例如 <code>v1.8.1911</code>）：说明您的系统已就绪，可以直接使用。</li>
+<li><strong>若提示“无法识别...”</strong>：请前往 Microsoft Store 搜索并更新 <strong>“应用安装程序 (App Installer)”</strong>。</li>
+</ul>
+<hr>
+<h2 id="2-核心工作流命令行的高效实践">2. 核心工作流：命令行的高效实践</h2>
+<p>Winget 的核心优势在于“精准”与“批量”。建议养成使用 ID (唯一标识符) 进行操作的习惯，而非依赖模糊的名称匹配。</p>
+<h3 id="21-搜索软件-search">2.1 搜索软件 (Search)</h3>
+<p>在安装前，我们需要确认软件在源中的准确 ID。</p>
+<pre><code class="language-powershell">winget search &lt;关键词&gt;
+# 示例：查找 7-Zip
+winget search 7zip
+</code></pre>
+<p><em>输出中 <code>ID</code> 一列即为我们需要关注的核心信息，例如 <code>7zip.7zip</code>。</em></p>
+<h3 id="22-精准安装-install">2.2 精准安装 (Install)</h3>
+<p>获取 ID 后，使用标准命令进行安装。建议始终添加 <code>-e</code> 参数（Exact，精确匹配），防止因名称相似而安装错误的软件。</p>
+<pre><code class="language-powershell">winget install --id &lt;ID&gt; -e
+# 示例：安装 7-Zip
+winget install --id 7zip.7zip -e
+</code></pre>
+<h3 id="23-批量管理与更新-upgrade">2.3 批量管理与更新 (Upgrade)</h3>
+<p>这是 Winget 最具价值的功能之一。它允许您一键检查并更新系统中所有已安装的软件（包括非 Winget 安装的软件）。</p>
+<ul>
+<li><strong>查看可更新列表</strong>：<pre><code class="language-powershell">winget upgrade
+</code></pre>
+</li>
+<li><strong>一键更新所有软件</strong>：<pre><code class="language-powershell">winget upgrade --all
+</code></pre>
+</li>
+</ul>
+<h3 id="24-软件卸载-uninstall">2.4 软件卸载 (Uninstall)</h3>
+<p>同样支持通过 ID 快速移除软件，无需进入控制面板。</p>
+<pre><code class="language-powershell">winget uninstall --id &lt;ID&gt; -e
+</code></pre>
+<hr>
+<h2 id="3-可视化方案部署-winget-图形界面管理器">3. 可视化方案：部署 Winget 图形界面管理器</h2>
+<p>虽然命令行具备极高的效率，但在浏览软件库或进行复杂的版本管理时，图形用户界面 (GUI) 依然具有直观的优势。</p>
+<p>官方目前仅提供命令行版本，但社区已经开发了成熟的第三方图形化前端。目前最推荐的是 <strong>UniGetUI</strong> (原名 WingetUI)。它能够索引 Winget、Scoop、Chocolatey 等多个包管理器的源，提供类似应用商店的操作体验。</p>
+<h3 id="安装-unigetui">安装 UniGetUI</h3>
+<p>您可以直接使用 Winget 命令来安装这款管理器：</p>
+<pre><code class="language-powershell">winget install --id Marticliment.UniGetUI -e
+</code></pre>
+<h3 id="使用体验">使用体验</h3>
+<p>安装完成后打开 UniGetUI，您将获得以下能力：</p>
+<ol>
+<li><strong>软件发现</strong>：通过搜索框查找软件，界面会显示软件的图标、版本和来源。</li>
+<li><strong>批量操作</strong>：勾选多个软件，点击一次即可批量安装或卸载。</li>
+<li><strong>自动更新</strong>：可以在设置中配置自动扫描并静默更新软件，替代各软件自带的繁琐更新程序。</li>
+<li><strong>导入导出</strong>：支持将当前电脑的软件列表导出为 JSON 或 YAML 格式，便于在新电脑上快速还原工作环境。</li>
+</ol>
+<hr>
+<h2 id="4-总结">4. 总结</h2>
+<p>Winget 并非仅仅是一个下载工具，它是 Windows 软件生态走向标准化、自动化的基础设施。</p>
+<ul>
+<li><strong>对于个人用户</strong>：它消除了寻找安装包的安全风险，提供了一键维持系统软件最新状态的便利。</li>
+<li><strong>对于IT专业人员</strong>：它提供了可脚本化的部署能力，使得在新机器上通过一行代码安装数十个必备软件成为可能。</li>
+</ul>
+<p>建议从今天开始，尝试使用 <code>winget install</code> 替代传统的下载安装习惯，构建更加整洁、可控的 Windows 软件环境。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://notes.redfox.moe/post/UWP/" class="post-title gt-a-link">
+                    解决 UWP 终端提权限制
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first"></div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        由<a href="https://www.cloudflare.com/ja-jp/" target="_blank">Cloudflare</a>驱动
+<br><br>Copyright © 2019-2025 Redfox.moe
+    </div>
+    <div>
+       
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
